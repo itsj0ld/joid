@@ -1,0 +1,493 @@
+/* ==========================================================================
+   BASE — tokens, reset, fundo ambiente, tipografia e acessibilidade
+   Tema único escuro: azul-marinho profundo com acentos de azul elétrico/ciano.
+   ========================================================================== */
+
+:root {
+  /* Paleta */
+  --ink-1000: #03060d;
+  --ink-950: #050912;
+  --ink-900: #060b18;
+  --ink-850: #081020;
+  --ink-800: #0a1428;
+  --ink-750: #0c1830;
+  --ink-700: #0f1b3d;
+  --ink-600: #14244f;
+
+  --accent: #4c7dff;
+  --accent-soft: #6ea8ff;
+  --accent-cyan: #67e8f9;
+  --accent-deep: #2e56c9;
+
+  /* Rosa usado só na Lista de Desejos, para diferenciar da Biblioteca. */
+  --rose: #ff9db4;
+  --rose-soft: #ffc2d1;
+  --rose-deep: #ff6f91;
+
+  --text: #eef4ff;
+  --text-soft: rgba(224, 234, 255, 0.74);
+  --text-muted: rgba(188, 205, 235, 0.52);
+  --text-faint: rgba(172, 192, 226, 0.36);
+
+  --line: rgba(176, 203, 255, 0.11);
+  --line-strong: rgba(189, 214, 255, 0.22);
+  --line-accent: rgba(110, 168, 255, 0.38);
+
+  --glass-top: rgba(255, 255, 255, 0.075);
+  --glass-bottom: rgba(255, 255, 255, 0.018);
+  --glass-bg: rgba(9, 16, 34, 0.34);
+  --glass-blur: 18px;
+  --glass-sat: 150%;
+
+  /* Tipografia */
+  --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --sans: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Estrutura */
+  --container: 1180px;
+  --gutter: clamp(20px, 4.2vw, 44px);
+  --header-h: 62px;
+  --header-top: 14px;
+  --radius-sm: 14px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 36px;
+  --section-y: clamp(88px, 11.5vw, 148px);
+
+  /* Movimento */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.18, 0.9, 0.22, 1.12);
+  --ease-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  color-scheme: dark;
+}
+
+/* ---------- Reset enxuto ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-x: clip;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(36, 68, 155, 0.24), transparent 70%),
+    linear-gradient(180deg, var(--ink-950) 0%, var(--ink-900) 34%, #071024 70%, var(--ink-950) 100%);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.65;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body.is-loading {
+  overflow: hidden;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+main {
+  position: relative;
+  z-index: 2;
+  display: block;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img,
+svg,
+video,
+canvas,
+iframe {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+::selection {
+  background: rgba(94, 140, 255, 0.38);
+  color: #fff;
+}
+
+::-moz-selection {
+  background: rgba(94, 140, 255, 0.38);
+  color: #fff;
+}
+
+/* Foco visível e consistente */
+:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+/* Scrollbar discreta */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(110, 168, 255, 0.32) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ink-950);
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid var(--ink-950);
+  border-radius: 999px;
+  background: rgba(110, 168, 255, 0.34);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 182, 255, 0.52);
+}
+
+/* ---------- Utilitários ---------- */
+.container {
+  width: min(100% - (var(--gutter) * 2), var(--container));
+  margin-inline: auto;
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+  scroll-margin-top: calc(var(--header-h) + (var(--header-top) * 2) + 18px);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 500;
+  padding: 12px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(8, 16, 32, 0.94);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transform: translateY(-160%);
+  transition: transform 0.3s var(--ease-out);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ---------- Texto auxiliar ---------- */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  width: 22px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent-soft), transparent);
+  content: "";
+}
+
+/* ---------- Fundo ambiente ---------- */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 45% at 15% 5%, rgba(30, 60, 140, 0.16), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 90% 40%, rgba(40, 110, 150, 0.08), transparent 70%);
+}
+
+.ambient__orb {
+  position: absolute;
+  width: 62vw;
+  max-width: 1000px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: 0.44;
+  filter: blur(110px);
+  will-change: transform;
+}
+
+.ambient__orb--one {
+  top: -28%;
+  left: -16%;
+  background: radial-gradient(circle at 42% 42%, rgba(58, 96, 224, 0.56), transparent 64%);
+  animation: drift-one 42s var(--ease-soft) infinite alternate;
+}
+
+.ambient__orb--two {
+  top: 28%;
+  right: -28%;
+  background: radial-gradient(circle at 50% 50%, rgba(54, 166, 190, 0.28), transparent 64%);
+  animation: drift-two 50s var(--ease-soft) infinite alternate;
+}
+
+.ambient__orb--three {
+  bottom: -38%;
+  left: 22%;
+  width: 55vw;
+  background: radial-gradient(circle at 50% 50%, rgba(102, 78, 220, 0.24), transparent 64%);
+  animation: drift-three 58s var(--ease-soft) infinite alternate;
+}
+
+.ambient__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(4, 7, 15, 0.22) 0%, transparent 20%, transparent 75%, rgba(4, 7, 15, 0.45) 100%);
+}
+
+@keyframes drift-one {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6vw, 4vh, 0) scale(1.12);
+  }
+  100% {
+    transform: translate3d(2vw, 9vh, 0) scale(0.96);
+  }
+}
+
+@keyframes drift-two {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-7vw, -5vh, 0) scale(1.1);
+  }
+  100% {
+    transform: translate3d(-2vw, 5vh, 0) scale(1.02);
+  }
+}
+
+@keyframes drift-three {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(8vw, -7vh, 0) scale(1.16);
+  }
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  opacity: 0.035;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  mix-blend-mode: soft-light;
+}
+
+.particles {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ---------- Progresso de scroll ---------- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  width: 100%;
+  height: 2px;
+  pointer-events: none;
+}
+
+.scroll-progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(76, 125, 255, 0), var(--accent), var(--accent-cyan));
+  box-shadow: 0 0 16px rgba(110, 168, 255, 0.55);
+  transform: scaleX(var(--scroll-progress, 0));
+  transform-origin: 0 50%;
+}
+
+/* ---------- Animações de entrada ---------- */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 26px, 0) scale(0.985);
+  transition:
+    opacity 0.75s var(--ease-out) var(--reveal-delay, 0ms),
+    transform 0.85s var(--ease-spring) var(--reveal-delay, 0ms),
+    filter 0.9s var(--ease-out) var(--reveal-delay, 0ms);
+}
+
+.js [data-reveal="blur"] {
+  filter: blur(12px);
+}
+
+.js [data-reveal].is-in {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+}
+
+/* ---------- Fallback sem JavaScript ---------- */
+.noscript {
+  position: fixed;
+  inset-inline: 16px;
+  bottom: 16px;
+  z-index: 300;
+  padding: 16px 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  background: rgba(6, 11, 24, 0.96);
+  color: var(--text-soft);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* ---------- Preferência por menos movimento ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .js [data-reveal] {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+
+  .ambient__orb {
+    animation: none;
+  }
+
+  .particles {
+    display: none;
+  }
+}
+
+/* ---------- Ajustes de tela pequena ---------- */
+@media (max-width: 760px) {
+  :root {
+    --header-h: 56px;
+    --header-top: 8px;
+    --glass-blur: 11px;
+    --glass-sat: 128%;
+    --section-y: 82px;
+  }
+
+  .ambient__orb {
+    width: 120vw;
+    filter: blur(70px);
+    opacity: 0.32;
+  }
+
+  .grain {
+    opacity: 0.028;
+  }
+
+  .particles {
+    opacity: 0.42;
+  }
+
+  .eyebrow {
+    font-size: 0.625rem;
+  }
+}
