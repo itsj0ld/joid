@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-BR" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <title>Natan — um canto pessoal</title>
+    <meta
+      name="description"
+      content="Perfis, jogos, projetos e pequenas descobertas de Natan (j0ld), reunidos em um só lugar."
+    />
+    <meta name="author" content="Natan" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#060b18" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / Twitter. Troque por URLs absolutas quando houver domínio próprio. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Natan" />
+    <meta property="og:title" content="Natan — um canto pessoal" />
+    <meta
+      property="og:description"
+      content="Perfis, jogos, projetos e pequenas descobertas — tudo em um só lugar."
+    />
+    <meta property="og:image" content="assets/og-cover.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Natan — perfis, jogos, projetos e descobertas." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Natan — um canto pessoal" />
+    <meta
+      name="twitter:description"
+      content="Perfis, jogos, projetos e pequenas descobertas — tudo em um só lugar."
+    />
+    <meta name="twitter:image" content="assets/og-cover.jpg" />
+
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <link rel="preload" as="image" href="assets/videos/hero-poster.jpg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300..600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/sections.css" />
+
+    <script>
+      // Ativa os estilos de animação apenas quando há JavaScript disponível.
+      document.documentElement.classList.remove("no-js");
+      document.documentElement.classList.add("js");
+
+      // Rede de segurança: se algum módulo falhar, o site nunca fica preso no loader.
+      window.setTimeout(function () {
+        if (document.body && !document.body.classList.contains("is-ready")) {
+          document.body.classList.remove("is-loading");
+          var loader = document.getElementById("loader");
+          if (loader) {
+            loader.classList.add("is-done");
+            window.setTimeout(function () {
+              loader.hidden = true;
+            }, 900);
+          }
+          document.querySelectorAll("[data-reveal]").forEach(function (el) {
+            el.classList.add("is-in");
+          });
+        }
+      }, 9000);
+    </script>
+  </head>
+
+  <body class="is-loading">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <!-- Barra fina de progresso da leitura -->
+    <div class="scroll-progress" aria-hidden="true"><span id="scrollProgress"></span></div>
+
+    <!-- Fundo ambiente: malha de gradientes, orbes lentos e grão -->
+    <div class="ambient" aria-hidden="true">
+      <span class="ambient__orb ambient__orb--one"></span>
+      <span class="ambient__orb ambient__orb--two"></span>
+      <span class="ambient__orb ambient__orb--three"></span>
+      <span class="ambient__veil"></span>
+    </div>
+    <div class="grain" aria-hidden="true"></div>
+    <canvas id="particles" class="particles" aria-hidden="true"></canvas>
+
+    <!-- ====================================================================
+         TELA DE CARREGAMENTO
+         O progresso é real: cada asset concluído (ou com erro) avança a barra.
+         ==================================================================== -->
+    <div id="loader" class="loader" role="status" aria-live="polite">
+      <div class="loader__inner">
+        <div class="loader__mark" aria-hidden="true">
+          <span>n</span>
+          <i></i>
+        </div>
+        <p class="loader__eyebrow" id="loaderTitle">um canto pessoal</p>
+        <p class="loader__status" id="loaderStatus" aria-live="polite">Carregando o essencial...</p>
+        <div
+          class="loader__track"
+          id="loaderTrack"
+          role="progressbar"
+          aria-label="Progresso do carregamento"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        >
+          <span class="loader__bar" id="loaderBar"></span>
+        </div>
+        <div class="loader__meta" aria-hidden="true">
+          <span id="loaderPercent">0%</span>
+          <span>j0ld</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         CABEÇALHO FIXO
+         ==================================================================== -->
+    <header class="site-header" data-header>
+      <div class="site-header__bar glass" data-header-bar>
+        <button
+          class="menu-toggle"
+          id="menuToggle"
+          type="button"
+          aria-label="Abrir menu"
+          aria-expanded="false"
+          aria-controls="siteMenu"
+        >
+          <span class="burger" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+
+        <!-- Os apelidos são injetados pelo JS a partir de site.apelidos.
+             O bloco é decorativo: o nome acessível já vem do título da página. -->
+        <div class="wordmark" id="wordmark" aria-hidden="true"></div>
+
+        <span class="site-header__ghost" aria-hidden="true"></span>
+      </div>
+    </header>
+
+    <!-- Painel de navegação em vidro -->
+    <div
+      class="menu"
+      id="siteMenu"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Menu de navegação"
+      aria-hidden="true"
+    >
+      <div class="menu__inner">
+        <p class="menu__hint" aria-hidden="true">navegue com calma</p>
+        <nav class="menu__nav" aria-label="Seções do site">
+          <ul id="menuList"></ul>
+        </nav>
+        <div class="menu__foot" aria-hidden="true">
+          <span>Natan</span>
+          <span>—</span>
+          <span id="menuYear">2026</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         CONTEÚDO RENDERIZADO A PARTIR DE js/data.js
+         ==================================================================== -->
+    <main id="conteudo"></main>
+
+    <!-- ====================================================================
+         FINAL
+         ==================================================================== -->
+    <footer class="final" id="final">
+      <div class="final__inner">
+        <h2 class="final__message" id="finalMessage" data-reveal="blur">
+          Isso é tudo, por enquanto...
+        </h2>
+        <div class="final__foot">
+          <span>© <span id="year">2026</span> Natan</span>
+          <span class="final__dot" aria-hidden="true"></span>
+          <span id="finalNote">feito com calma</span>
+          <span class="final__dot" aria-hidden="true"></span>
+          <a href="#inicio" class="final__top">voltar ao topo ↑</a>
+        </div>
+      </div>
+    </footer>
+
+    <button class="back-to-top glass" id="backToTop" type="button" aria-label="Voltar ao topo">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M12 19V5M6 11l6-6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+
+    <noscript>
+      <div class="noscript">
+        <p>Este site monta o conteúdo com JavaScript. Ative o JavaScript para navegar.</p>
+      </div>
+    </noscript>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

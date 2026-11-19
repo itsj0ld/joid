@@ -1,0 +1,13 @@
+# Pastas originais de onde os assets foram copiados.
+# O site publicado usa apenas assets/ — estas ficam fora do repositório.
+/Icons/
+/Cards/
+/Videos/
+
+# Sistema e ferramentas
+.DS_Store
+Thumbs.db
+desktop.ini
+.vercel
+node_modules/
+*.log

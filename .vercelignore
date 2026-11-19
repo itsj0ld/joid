@@ -1,0 +1,11 @@
+# Pastas originais de onde os assets foram copiados.
+# Não fazem parte do site publicado.
+/Icons/
+/Cards/
+/Videos/
+
+# Arquivos locais de teste e ferramentas
+viewport-test.html
+.vercel
+node_modules/
+*.log
