@@ -115,12 +115,13 @@ export function renderHero() {
           loop
           playsinline
           webkit-playsinline
-          preload="auto"
+          preload="metadata"
           poster="${escapeHTML(hero.poster)}"
           aria-hidden="true"
           tabindex="-1"
         >
           <source src="${escapeHTML(hero.video)}" type="video/webm" />
+          <source src="${escapeHTML(hero.videoMp4)}" type="video/mp4" />
         </video>
       </div>
       <div class="hero__overlay" aria-hidden="true"></div>

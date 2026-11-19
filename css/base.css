@@ -290,7 +290,6 @@ button:disabled {
   aspect-ratio: 1;
   border-radius: 50%;
   opacity: 0.44;
-  filter: blur(110px);
   will-change: transform;
 }
 
@@ -364,7 +363,7 @@ button:disabled {
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
   background-size: 180px 180px;
-  mix-blend-mode: soft-light;
+  mix-blend-mode: normal;
 }
 
 .particles {
@@ -398,6 +397,20 @@ button:disabled {
   transform-origin: 0 50%;
 }
 
+@supports (animation-timeline: scroll()) {
+  .scroll-progress span {
+    transform: scaleX(0);
+    animation: scroll-progress-grow linear both;
+    animation-timeline: scroll(root);
+  }
+}
+
+@keyframes scroll-progress-grow {
+  to {
+    transform: scaleX(1);
+  }
+}
+
 /* ---------- Animações de entrada ---------- */
 .js [data-reveal] {
   opacity: 0;
@@ -414,7 +427,7 @@ button:disabled {
 
 .js [data-reveal].is-in {
   opacity: 1;
-  filter: blur(0);
+  filter: none;
   transform: none;
 }
 
@@ -475,7 +488,6 @@ button:disabled {
 
   .ambient__orb {
     width: 120vw;
-    filter: blur(70px);
     opacity: 0.32;
   }
 

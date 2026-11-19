@@ -43,7 +43,6 @@
   width: 58vw;
   aspect-ratio: 1;
   background: radial-gradient(circle at 50% 50%, rgba(63, 103, 235, 0.36), transparent 62%);
-  filter: blur(70px);
   animation: hero-float-one 26s var(--ease-soft) infinite alternate;
 }
 
@@ -53,7 +52,6 @@
   width: 52vw;
   aspect-ratio: 1;
   background: radial-gradient(circle at 50% 50%, rgba(65, 196, 208, 0.2), transparent 64%);
-  filter: blur(80px);
   animation: hero-float-two 32s var(--ease-soft) infinite alternate;
 }
 
@@ -81,9 +79,6 @@
   transition: filter 0.8s var(--ease-out);
 }
 
-.hero.is-scrolled .hero__media {
-  filter: blur(8px);
-}
 
 .hero__video {
   width: 100%;
@@ -117,7 +112,7 @@
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
   background-size: 180px 180px;
-  mix-blend-mode: soft-light;
+  mix-blend-mode: normal;
 }
 
 .hero__content {
@@ -178,28 +173,28 @@
 
 .is-ready .hero__eyebrow {
   opacity: 1;
-  filter: blur(0);
+  filter: none;
   transform: none;
   transition-delay: 0.18s;
 }
 
 .is-ready .hero__title {
   opacity: 1;
-  filter: blur(0);
+  filter: none;
   transform: none;
   transition-delay: 0.3s;
 }
 
 .is-ready .hero__support {
   opacity: 1;
-  filter: blur(0);
+  filter: none;
   transform: none;
   transition-delay: 0.44s;
 }
 
 .is-ready .hero__scroll {
   opacity: 1;
-  filter: blur(0);
+  filter: none;
   transform: none;
   transition-delay: 0.66s;
 }
@@ -609,7 +604,6 @@
     0 26px 60px -42px rgba(0, 0, 0, 0.95),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
   transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
-  transform-style: preserve-3d;
   transition:
     border-color 0.35s var(--ease-out),
     box-shadow 0.45s var(--ease-out),
@@ -704,14 +698,14 @@
   padding: 0 9px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
-  background: rgba(5, 10, 22, 0.46);
+  background: rgba(5, 10, 22, 0.82);
   color: rgba(234, 243, 255, 0.72);
   font-size: 0.56rem;
   font-variant-numeric: tabular-nums;
   font-weight: 500;
   letter-spacing: 0.14em;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 .game-card__flag {
@@ -725,14 +719,14 @@
   padding: 0 9px;
   border: 1px solid rgba(189, 214, 255, 0.12);
   border-radius: 999px;
-  background: rgba(5, 10, 22, 0.5);
+  background: rgba(5, 10, 22, 0.82);
   color: var(--text-muted);
   font-size: 0.52rem;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 .game-card__body {
@@ -807,13 +801,13 @@
   padding: 0 14px;
   border: 1px solid rgba(189, 214, 255, 0.22);
   border-radius: 999px;
-  background: rgba(11, 22, 46, 0.68);
+  background: rgba(11, 22, 46, 0.92);
   color: #eef4ff;
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.02em;
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   transition:
     background 0.3s var(--ease-out),
     border-color 0.3s var(--ease-out),
@@ -980,13 +974,13 @@ html[data-input="coarse"] .game-card__cta {
   border-radius: 999px;
   background:
     linear-gradient(145deg, rgba(255, 157, 180, 0.2), rgba(255, 111, 145, 0.08)),
-    rgba(19, 7, 15, 0.58);
+    rgba(19, 7, 15, 0.84);
   box-shadow:
     0 0 20px -8px rgba(255, 111, 145, 0.85),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
   color: var(--rose-soft);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   pointer-events: none;
   place-items: center;
 }
@@ -1896,7 +1890,6 @@ html[data-input="coarse"] .game-card__cta {
 
   .hero__bg::before,
   .hero__bg::after {
-    filter: blur(55px);
     opacity: 0.8;
   }
 
@@ -2176,4 +2169,14 @@ html[data-input="coarse"] .game-card__cta {
   .project-card--empty::after {
     animation: none;
   }
+}
+
+/* Otimização: cards de perfil e alternativas sem blur sobre o fundo escuro. */
+.profile-card.glass,
+.alt-card.glass {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.015) 55%, rgba(76, 125, 255, 0.035) 100%),
+    rgba(9, 16, 34, 0.72);
 }

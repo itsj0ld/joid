@@ -14,7 +14,7 @@ const pad = (number) => String(number).padStart(2, "0");
 /* -------------------------------------------------------------------------- */
 export function setupScrollUI() {
   const header = document.querySelector("[data-header]");
-  const progress = document.getElementById("scrollProgress");
+  const timelineSupported = window.CSS?.supports?.("animation-timeline: scroll()");
   const backToTop = document.getElementById("backToTop");
 
   let ticking = false;
@@ -25,8 +25,9 @@ export function setupScrollUI() {
     const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     const ratio = clamp(scrollTop / max, 0, 1);
 
-    document.documentElement.style.setProperty("--scroll-progress", ratio.toFixed(4));
-    if (progress) progress.parentElement?.style.setProperty("--scroll-progress", ratio.toFixed(4));
+    if (!timelineSupported) {
+      document.documentElement.style.setProperty("--scroll-progress", ratio.toFixed(4));
+    }
 
     header?.classList.toggle("is-scrolled", scrollTop > 14);
     backToTop?.classList.toggle("is-visible", scrollTop > 560);

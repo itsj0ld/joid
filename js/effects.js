@@ -62,8 +62,14 @@ export function setupParticles() {
     }));
   };
 
+  const FRAME_MS = 1000 / 30;
+  let lastDraw = 0;
+
   const draw = (time) => {
     if (!running) return;
+    frame = window.requestAnimationFrame(draw);
+    if (time - lastDraw < FRAME_MS) return;
+    lastDraw = time;
 
     const delta = clamp((time - lastTime) / 16.67, 0.4, 2.4);
     lastTime = time;
@@ -92,7 +98,6 @@ export function setupParticles() {
       if (particle.x < -8) particle.x = width + 8;
       if (particle.x > width + 8) particle.x = -8;
 
-      // Linha discreta entre partículas próximas.
       context.beginPath();
       context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
       context.fillStyle =
@@ -101,8 +106,6 @@ export function setupParticles() {
           : `rgba(150, 186, 255, ${particle.alpha})`;
       context.fill();
     }
-
-    frame = window.requestAnimationFrame(draw);
   };
 
   const start = () => {
@@ -178,34 +181,38 @@ export function setupSpotlight() {
 export function setupTilt() {
   if (!mqFine.matches || mqReduce.matches) return;
 
-  const onMove = (event) => {
-    const card = event.target.closest("[data-game-card]");
-    if (!card) return;
-
+  document.querySelectorAll("[data-game-card]").forEach((card) => {
     const inner = card.querySelector(".game-card__inner");
     if (!inner) return;
 
-    const rect = card.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width - 0.5;
-    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    let frame = 0;
+    let last = null;
 
-    inner.style.setProperty("--tilt-y", `${(x * 6).toFixed(2)}deg`);
-    inner.style.setProperty("--tilt-x", `${(-y * 6).toFixed(2)}deg`);
-    inner.style.setProperty("--mx", `${event.clientX - rect.left}px`);
-    inner.style.setProperty("--my", `${event.clientY - rect.top}px`);
-  };
+    const apply = () => {
+      frame = 0;
+      const rect = card.getBoundingClientRect();
+      const x = (last.clientX - rect.left) / rect.width - 0.5;
+      const y = (last.clientY - rect.top) / rect.height - 0.5;
+      inner.style.setProperty("--tilt-y", `${(x * 6).toFixed(2)}deg`);
+      inner.style.setProperty("--tilt-x", `${(-y * 6).toFixed(2)}deg`);
+    };
 
-  const onLeave = (event) => {
-    const card = event.target.closest("[data-game-card]");
-    if (!card) return;
-    const inner = card.querySelector(".game-card__inner");
-    if (!inner) return;
-    inner.style.removeProperty("--tilt-x");
-    inner.style.removeProperty("--tilt-y");
-  };
+    card.addEventListener(
+      "pointermove",
+      (event) => {
+        last = event;
+        if (!frame) frame = window.requestAnimationFrame(apply);
+      },
+      { passive: true },
+    );
 
-  document.addEventListener("pointermove", onMove, { passive: true });
-  document.addEventListener("pointerout", onLeave, { passive: true });
+    card.addEventListener("pointerleave", () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      frame = 0;
+      inner.style.removeProperty("--tilt-x");
+      inner.style.removeProperty("--tilt-y");
+    });
+  });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -262,7 +269,8 @@ export function setupHero() {
 
     video.addEventListener("canplay", markReady, { once: true });
     video.addEventListener("loadeddata", markReady, { once: true });
-    video.addEventListener("error", markFailed, { once: true });
+    // Falha de fonte dispara no <source>, não no <video>.
+    video.querySelector("source:last-of-type")?.addEventListener("error", markFailed, { once: true });
 
     if (video.readyState >= 2) markReady();
 

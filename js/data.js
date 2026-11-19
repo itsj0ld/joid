@@ -39,7 +39,8 @@ export const site = {
     apoio:
       "Perfis, jogos, projetos e pequenas descobertas — tudo em um só lugar, sem pressa.",
     rotuloScroll: "role para explorar",
-    video: "assets/videos/hero.webm",
+    video: "assets/videos/hero-720.webm",
+    videoMp4: "assets/videos/hero-720.mp4",
     // O poster é gerado a partir do próprio vídeo. Pode trocar por outra imagem.
     poster: "assets/videos/hero-poster.jpg",
   },

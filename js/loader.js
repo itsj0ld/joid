@@ -1,15 +1,13 @@
 /**
- * Tela de carregamento com progresso REAL.
- *
- * Cada asset concluído — ou que falhou — soma peso na barra. O vídeo tem peso
- * maior porque é o asset mais pesado. Se algo demorar demais, um limite de
- * 6,5s libera o site mesmo assim: o carregamento nunca trava a experiência.
+ * Tela de carregamento com progresso real.
+ * O vídeo não entra mais no caminho crítico: ele carrega em segundo plano.
+ * Um limite de 2,5 s libera o site mesmo que algum asset demore.
  */
 import { site, perfis, biblioteca, desejos } from "./data.js";
 
 const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
-function preloadImage(source, timeout = 4500) {
+function preloadImage(source, timeout = 2500) {
   return new Promise((resolve) => {
     if (!source) {
       resolve();
@@ -33,37 +31,7 @@ function preloadImage(source, timeout = 4500) {
   });
 }
 
-function preloadVideo(video, timeout = 7000) {
-  return new Promise((resolve) => {
-    if (!video) {
-      resolve();
-      return;
-    }
-
-    if (video.readyState >= 2) {
-      resolve();
-      return;
-    }
-
-    let settled = false;
-    const finish = () => {
-      if (settled) return;
-      settled = true;
-      video.removeEventListener("canplay", finish);
-      video.removeEventListener("loadeddata", finish);
-      video.removeEventListener("error", finish);
-      window.clearTimeout(timer);
-      resolve();
-    };
-    const timer = window.setTimeout(finish, timeout);
-
-    video.addEventListener("canplay", finish, { once: true });
-    video.addEventListener("loadeddata", finish, { once: true });
-    video.addEventListener("error", finish, { once: true });
-  });
-}
-
-function waitForFonts(timeout = 2500) {
+function waitForFonts(timeout = 1500) {
   if (!document.fonts?.ready) return Promise.resolve();
 
   return Promise.race([document.fonts.ready, wait(timeout)]);
@@ -84,23 +52,14 @@ export async function runLoader() {
   const messages = site.carregamento.etapas;
   const icons = perfis.map((perfil) => perfil.icone).filter(Boolean);
 
-  // Apenas uma amostra das capas entra no loader. O restante continua com
-  // loading="lazy" e só é baixado quando o visitante rola até a seção.
+  // Apenas uma amostra das capas entra no loader; o restante é lazy.
   const cards = [
     ...biblioteca.slice(0, 4).map((game) => game.imagem).filter(Boolean),
     ...desejos.slice(0, 2).map((game) => game.imagem).filter(Boolean),
   ];
 
-  const weights = {
-    video: 8,
-    poster: 1,
-    icons: icons.length,
-    cards: cards.length,
-    fonts: 2,
-  };
-
-  const totalWeight =
-    weights.video + weights.poster + weights.icons + weights.cards + weights.fonts || 1;
+  const weights = { poster: 2, icons: icons.length, cards: cards.length, fonts: 2 };
+  const totalWeight = weights.poster + weights.icons + weights.cards + weights.fonts || 1;
 
   let completedWeight = 0;
   let finished = false;
@@ -124,12 +83,7 @@ export async function runLoader() {
 
   setProgress(2);
 
-  const video = document.getElementById("heroVideo");
-  const poster = site.hero.poster;
-
-  // O vídeo e o poster começam já; os grupos menores terminam na frente.
-  const videoTask = preloadVideo(video).then(() => add(weights.video));
-  const posterTask = preloadImage(poster).then(() => add(weights.poster));
+  const posterTask = preloadImage(site.hero.poster).then(() => add(weights.poster));
 
   const work = (async () => {
     setStatus(messages.icones);
@@ -141,23 +95,15 @@ export async function runLoader() {
     setStatus(messages.fontes);
     await waitForFonts().then(() => add(weights.fonts));
 
-    // Se o vídeo ainda estiver baixando, a barra fica visivelmente nele.
-    const videoDone = await Promise.race([
-      videoTask.then(() => true),
-      wait(7000).then(() => false),
-    ]);
     await posterTask;
-
-    if (!videoDone) setStatus(messages.video);
-    setStatus(videoDone ? messages.final : messages.final);
-    await wait(220);
+    setStatus(messages.final);
+    await wait(180);
   })();
 
-  // Limite absoluto: nunca segura o site por mais de 6,5 segundos.
-  await Promise.race([work, wait(6500)]);
+  await Promise.race([work, wait(2500)]);
   finished = true;
 
   setStatus(messages.final);
   setProgress(100);
-  await wait(420);
+  await wait(360);
 }

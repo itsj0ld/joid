@@ -378,7 +378,7 @@
 
 .wordmark__name.is-active {
   opacity: 1;
-  filter: blur(0);
+  filter: none;
   transform: none;
 }
 
@@ -466,7 +466,7 @@
 
 .menu.is-open .menu__link {
   opacity: 1;
-  filter: blur(0);
+  filter: none;
   transform: none;
 }
 
