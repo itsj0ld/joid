@@ -131,12 +131,77 @@ export function renderHero() {
         <p class="hero__eyebrow eyebrow">${escapeHTML(hero.eyebrow)}</p>
         <h1 class="hero__title" id="hero-title" tabindex="-1">${title}</h1>
         <p class="hero__support">${escapeHTML(hero.apoio)}</p>
+        <nav class="hero__quick-nav" aria-label="Atalhos para seções">
+          <a href="#destaques">Destaques</a>
+          <a href="#perfis">Perfis</a>
+          <a href="#biblioteca">Jogos</a>
+          <a href="#projetos">Projetos</a>
+          <a href="#alternativas">Alternativas</a>
+        </nav>
       </div>
 
       <a class="hero__scroll" href="#perfis">
         <span>${escapeHTML(hero.rotuloScroll)}</span>
         <span class="hero__scroll-line" aria-hidden="true"></span>
       </a>
+    </section>
+  `;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Destaques                                                                   */
+/* -------------------------------------------------------------------------- */
+function renderHighlights() {
+  const section = getSection("destaques");
+  if (!section) return "";
+
+  const collections = { biblioteca, desejos, alternativas };
+  const highlights = (site.destaques || [])
+    .map((highlight, index) => {
+      const item = collections[highlight.colecao]?.find((entry) => entry.id === highlight.id);
+      if (!item?.url) return "";
+
+      return `
+        <a
+          class="highlight-card glass"
+          href="${escapeHTML(item.url)}"
+          ${attrs(item.url)}
+          data-reveal
+          style="--reveal-delay: ${index * 80}ms"
+          aria-label="Abrir ${escapeHTML(item.nome)} em nova aba"
+        >
+          <img
+            class="highlight-card__image"
+            src="${escapeHTML(item.imagem)}"
+            alt=""
+            width="267"
+            height="400"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="highlight-card__shade" aria-hidden="true"></span>
+          <span class="highlight-card__meta">${escapeHTML(highlight.rotulo)}</span>
+          <span class="highlight-card__body">
+            <span class="highlight-card__name">${escapeHTML(item.nome)}</span>
+            <span class="highlight-card__action">abrir ${icons.arrowUpRight}</span>
+          </span>
+        </a>
+      `;
+    })
+    .join("");
+
+  if (!highlights) return "";
+  const numero = secoes.indexOf(section) + 1;
+
+  return `
+    <section class="section section--highlights" id="destaques" aria-labelledby="destaques-title">
+      <div class="container">
+        <div class="highlights-head">
+          ${renderSectionHeader(section.titulo, section.descricao, numero, section.id)}
+          <span class="highlights-head__note" aria-hidden="true">seleção atual</span>
+        </div>
+        <div class="highlights-grid">${highlights}</div>
+      </div>
     </section>
   `;
 }
@@ -213,6 +278,7 @@ function renderProfiles() {
         ${renderSectionHeader(section.titulo, section.descricao, numero, section.id)}
         <ul class="profiles-grid">${cards}</ul>
         <span class="visually-hidden" role="status" data-copy-status></span>
+        <div class="copy-toast" data-copy-toast role="status" aria-live="polite" hidden></div>
       </div>
     </section>
   `;
@@ -542,6 +608,7 @@ export function renderSite() {
   if (main) {
     main.innerHTML = [
       renderHero(),
+      renderHighlights(),
       renderProfiles(),
       renderLibrary(),
       renderWishlist(),

@@ -60,6 +60,14 @@ export const site = {
     mensagem: "Isso é tudo, por enquanto...",
     rodape: "feito com calma",
   },
+
+  // Itens em evidência logo depois da apresentação. Cada um referencia um
+  // card já existente para não duplicar imagens, links ou títulos.
+  destaques: [
+    { colecao: "biblioteca", id: "warzone", rotulo: "na biblioteca" },
+    { colecao: "desejos", id: "forza-horizon-6", rotulo: "na lista de desejos" },
+    { colecao: "alternativas", id: "filen", rotulo: "alternativa de arquivos" },
+  ],
 };
 
 /* ==========================================================================
@@ -69,6 +77,12 @@ export const site = {
    `nav` é o texto curto exibido dentro do menu.
    ========================================================================== */
 export const secoes = [
+  {
+    id: "destaques",
+    nav: "Destaques",
+    titulo: "Em destaque",
+    descricao: "Três coisas que estão chamando atenção por aqui agora.",
+  },
   {
     id: "perfis",
     nav: "Perfis",

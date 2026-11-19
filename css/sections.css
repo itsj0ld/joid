@@ -157,10 +157,47 @@
   text-wrap: pretty;
 }
 
+/* Atalhos curtos para quem prefere pular direto para uma seção. */
+.hero__quick-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 560px;
+  margin-top: clamp(24px, 3.2vh, 32px);
+}
+
+.hero__quick-nav a {
+  min-height: 34px;
+  padding: 0 13px;
+  border: 1px solid rgba(204, 221, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(5, 12, 28, 0.24);
+  color: rgba(226, 237, 255, 0.72);
+  font-size: 0.61rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 34px;
+  text-transform: uppercase;
+  transition:
+    border-color 0.3s var(--ease-out),
+    background 0.3s var(--ease-out),
+    color 0.3s var(--ease-out),
+    transform 0.3s var(--ease-spring);
+}
+
+.hero__quick-nav a:hover,
+.hero__quick-nav a:focus-visible {
+  border-color: rgba(160, 199, 255, 0.48);
+  background: rgba(86, 137, 255, 0.16);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
 /* Entrada do hero depois do loader */
 .hero__eyebrow,
 .hero__title,
 .hero__support,
+.hero__quick-nav,
 .hero__scroll {
   opacity: 0;
   filter: blur(11px);
@@ -192,11 +229,168 @@
   transition-delay: 0.44s;
 }
 
+.is-ready .hero__quick-nav {
+  opacity: 1;
+  filter: none;
+  transform: none;
+  transition-delay: 0.56s;
+}
+
 .is-ready .hero__scroll {
   opacity: 1;
   filter: none;
   transform: none;
   transition-delay: 0.66s;
+}
+
+/* ===========================================================================
+   DESTAQUES
+   =========================================================================== */
+.section--highlights {
+  padding-top: clamp(64px, 9vw, 112px);
+  padding-bottom: clamp(62px, 8vw, 104px);
+}
+
+.highlights-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.highlights-head .section-head {
+  margin-bottom: 0;
+}
+
+.highlights-head__note {
+  flex: none;
+  padding-bottom: 7px;
+  color: var(--text-faint);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.highlight-card {
+  position: relative;
+  display: flex;
+  min-height: clamp(214px, 23vw, 284px);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  isolation: isolate;
+  box-shadow: 0 28px 60px -46px rgba(0, 0, 0, 0.96);
+  transition:
+    border-color 0.35s var(--ease-out),
+    box-shadow 0.45s var(--ease-out),
+    transform 0.5s var(--ease-spring);
+}
+
+.highlight-card__image,
+.highlight-card__shade {
+  position: absolute;
+  inset: 0;
+}
+
+.highlight-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 28%;
+  opacity: 0.74;
+  transition: opacity 0.45s var(--ease-out), transform 0.8s var(--ease-out);
+}
+
+.highlight-card__shade {
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(3, 7, 16, 0.06) 4%, rgba(3, 7, 16, 0.3) 46%, rgba(3, 7, 16, 0.94) 100%),
+    linear-gradient(90deg, rgba(5, 10, 24, 0.42), transparent 74%);
+}
+
+.highlight-card__meta,
+.highlight-card__body {
+  position: relative;
+  z-index: 2;
+}
+
+.highlight-card__meta {
+  align-self: flex-start;
+  margin: 15px;
+  padding: 5px 9px;
+  border: 1px solid rgba(224, 236, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(4, 10, 23, 0.42);
+  color: rgba(235, 243, 255, 0.76);
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.highlight-card__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: flex-end;
+  width: 100%;
+  padding: 18px;
+}
+
+.highlight-card__name {
+  color: #f4f8ff;
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 2.8vw, 2.5rem);
+  letter-spacing: -0.025em;
+  line-height: 0.95;
+}
+
+.highlight-card__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-cyan);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.highlight-card__action svg {
+  width: 13px;
+  height: 13px;
+  transition: transform 0.35s var(--ease-spring);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .highlight-card:hover,
+  .highlight-card:focus-visible {
+    border-color: rgba(173, 205, 255, 0.34);
+    box-shadow: 0 34px 76px -46px rgba(0, 0, 0, 1), 0 0 42px -28px rgba(76, 125, 255, 0.6);
+    transform: translateY(-5px);
+  }
+
+  .highlight-card:hover .highlight-card__image,
+  .highlight-card:focus-visible .highlight-card__image {
+    opacity: 0.94;
+    transform: scale(1.045);
+  }
+
+  .highlight-card:hover .highlight-card__action svg,
+  .highlight-card:focus-visible .highlight-card__action svg {
+    transform: translate(2px, -2px);
+  }
 }
 
 /* Indicador de rolagem */
@@ -1912,6 +2106,49 @@ html[data-input="coarse"] .game-card__cta {
     line-height: 1.7;
   }
 
+  .hero__quick-nav {
+    gap: 7px;
+    margin-top: 24px;
+  }
+
+  .hero__quick-nav a {
+    min-height: 32px;
+    padding-inline: 11px;
+    font-size: 0.55rem;
+    line-height: 32px;
+  }
+
+  .highlights-head {
+    display: block;
+    margin-bottom: 22px;
+  }
+
+  .highlights-head__note {
+    display: none;
+  }
+
+  .highlights-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .highlight-card {
+    min-height: 192px;
+    border-radius: 19px;
+  }
+
+  .highlight-card__body {
+    padding: 16px;
+  }
+
+  .highlight-card__meta {
+    margin: 13px;
+  }
+
+  .highlight-card__name {
+    font-size: 2rem;
+  }
+
   .hero__scroll {
     bottom: max(18px, env(safe-area-inset-bottom));
     gap: 8px;
@@ -1933,9 +2170,8 @@ html[data-input="coarse"] .game-card__cta {
     justify-self: center;
   }
 
-  /* O card com botão Copiar ocupa a linha inteira para o texto respirar. */
+  /* O card com botão Copiar permanece alinhado à grade dos perfis. */
   .profile-card--copy {
-    grid-column: 1 / -1;
     width: auto;
     justify-self: stretch;
   }

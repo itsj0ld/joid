@@ -242,7 +242,9 @@ export function setupCopy() {
   if (buttons.length === 0) return;
 
   const status = document.querySelector("[data-copy-status]");
+  const toast = document.querySelector("[data-copy-toast]");
   let resetTimer = 0;
+  let toastTimer = 0;
 
   const fallbackCopy = (text) => {
     const field = document.createElement("textarea");
@@ -290,6 +292,19 @@ export function setupCopy() {
         status.textContent = copied
           ? `${text} copiado para a área de transferência.`
           : "Não foi possível copiar. Selecione e copie manualmente.";
+      }
+
+      if (toast) {
+        toast.textContent = copied ? `${text} copiado` : "Não foi possível copiar";
+        toast.hidden = false;
+        window.requestAnimationFrame(() => toast.classList.add("is-visible"));
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => {
+          toast.classList.remove("is-visible");
+          window.setTimeout(() => {
+            if (!toast.classList.contains("is-visible")) toast.hidden = true;
+          }, 260);
+        }, 2200);
       }
 
       window.clearTimeout(resetTimer);
