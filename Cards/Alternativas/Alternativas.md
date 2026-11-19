@@ -1,0 +1,13 @@
+Dropbox → Filen ([https://filen.io/](https://filen.io/))  
+Netflix/Disney Plus → Stremio ([https://www.stremio.com/translation/br](https://www.stremio.com/translation/br))  
+Play Store → Aurora Store ([https://auroraoss.com/aurora-store](https://auroraoss.com/aurora-store))  
+Gerenciador de Arquivos → Material Files ([https://github.com/zhanghai/MaterialFiles](https://github.com/zhanghai/MaterialFiles))  
+Spotify/YouTube Music → Echo Music ([https://echomusic.fun/](https://echomusic.fun/))  
+Gmail/Apple Mail/Outlook → Thunderbird ([https://www.thunderbird.net/pt-BR/](https://www.thunderbird.net/pt-BR/))  
+Letterboxd → CircleRanks ([https://circleranks.com/](https://circleranks.com/))  
+GoogleAuth/Microsoft Auth → EnteAuth ([https://ente.com/auth/](https://ente.com/auth/))  
+Adobe/Microsoft Office → ArtCraft ([https://getartcraft.com/](https://getartcraft.com/))  
+WhatsApp Web → ZapFast ([https://zapfast.rocks/](https://zapfast.rocks/))  
+Spotify App/Web → SpotiFast ([https://spotifast.rocks/](https://spotifast.rocks/))
+ChatGPT → EcoGPT ([https://ecogpt.com/about](https://ecogpt.com/about))
+
