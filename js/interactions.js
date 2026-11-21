@@ -1,6 +1,6 @@
 /**
- * Interações: cabeçalho, menu acessível, revelações, carrossel da biblioteca,
- * filtros das alternativas, prévia dos projetos e progresso de leitura.
+ * Interações: cabeçalho, menu acessível, cópia, estante arrastável,
+ * filtros das alternativas e prévia dos projetos.
  */
 
 const mqReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -29,8 +29,8 @@ export function setupScrollUI() {
       document.documentElement.style.setProperty("--scroll-progress", ratio.toFixed(4));
     }
 
-    header?.classList.toggle("is-scrolled", scrollTop > 14);
-    backToTop?.classList.toggle("is-visible", scrollTop > 560);
+    header?.classList.toggle("is-scrolled", scrollTop > 8);
+    backToTop?.classList.toggle("is-visible", scrollTop > 600);
   };
 
   const onScroll = () => {
@@ -53,29 +53,6 @@ export function setupScrollUI() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Nome central que alterna                                                    */
-/* -------------------------------------------------------------------------- */
-export function setupWordmark() {
-  const wordmark = document.getElementById("wordmark");
-  if (!wordmark) return;
-
-  const names = Array.from(wordmark.querySelectorAll(".wordmark__name"));
-  if (names.length < 2 || mqReduce.matches) return;
-
-  let index = 0;
-  const advance = () => {
-    names[index].classList.remove("is-active");
-    index = (index + 1) % names.length;
-    names[index].classList.add("is-active");
-  };
-
-  // O intervalo continua discreto; em aba oculta, nada acontece.
-  window.setInterval(() => {
-    if (!document.hidden) advance();
-  }, 3400);
-}
-
-/* -------------------------------------------------------------------------- */
 /* Menu acessível (armadilha de foco, Escape, inert)                          */
 /* -------------------------------------------------------------------------- */
 export function setupMenu() {
@@ -84,6 +61,8 @@ export function setupMenu() {
   const main = document.getElementById("conteudo");
   const footer = document.getElementById("final");
   const backToTop = document.getElementById("backToTop");
+  const wordmark = document.querySelector(".wordmark");
+  const headerLink = document.querySelector(".header-link");
 
   if (!toggle || !menu) return;
 
@@ -94,9 +73,15 @@ export function setupMenu() {
   let lastFocused = null;
 
   const setBackgroundInert = (inert) => {
-    [main, footer, backToTop].forEach((element) => {
+    [main, footer, backToTop, wordmark, headerLink].forEach((element) => {
       if (element) element.inert = inert;
     });
+  };
+
+  const positionMenu = () => {
+    const rect = toggle.getBoundingClientRect();
+    menu.style.setProperty("--menu-x", `${rect.left + rect.width / 2}px`);
+    menu.style.setProperty("--menu-y", `${rect.top + rect.height / 2}px`);
   };
 
   const open = () => {
@@ -104,6 +89,7 @@ export function setupMenu() {
     isOpen = true;
     lastFocused = document.activeElement;
 
+    positionMenu();
     menu.classList.add("is-open");
     menu.setAttribute("aria-hidden", "false");
     toggle.setAttribute("aria-expanded", "true");
@@ -112,7 +98,7 @@ export function setupMenu() {
     setBackgroundInert(true);
 
     const first = menu.querySelector(focusableSelector);
-    window.setTimeout(() => first?.focus(), 160);
+    window.setTimeout(() => first?.focus(), 70);
   };
 
   const close = ({ restoreFocus = true } = {}) => {
@@ -150,13 +136,20 @@ export function setupMenu() {
 
     close();
 
+    if (hash === "#inicio") {
+      window.setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: mqReduce.matches ? "auto" : "smooth" });
+      }, 70);
+      return;
+    }
+
     if (target) {
       window.setTimeout(() => {
         target.scrollIntoView({
           behavior: mqReduce.matches ? "auto" : "smooth",
           block: "start",
         });
-      }, 80);
+      }, 70);
     }
   });
 
@@ -188,50 +181,10 @@ export function setupMenu() {
       first.focus();
     }
   });
-}
 
-/* -------------------------------------------------------------------------- */
-/* Revelações com IntersectionObserver (reaproveitadas no replay)             */
-/* -------------------------------------------------------------------------- */
-export function setupReveals() {
-  const elements = Array.from(document.querySelectorAll("[data-reveal]"));
-  const noop = { replay: () => {} };
-  if (elements.length === 0) return noop;
-
-  if (mqReduce.matches || !("IntersectionObserver" in window)) {
-    elements.forEach((element) => element.classList.add("is-in"));
-    return noop;
-  }
-
-  let observer = null;
-
-  const observeAll = () => {
-    observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-in");
-          observer?.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -7% 0px" },
-    );
-
-    elements.forEach((element) => observer.observe(element));
-  };
-
-  // Esconde tudo e observa de novo: usado quando a experiência é reiniciada.
-  const replay = () => {
-    observer?.disconnect();
-    elements.forEach((element) => element.classList.remove("is-in"));
-    // Força o navegador a registrar o estado inicial antes de reanimar.
-    void document.body.offsetWidth;
-    observeAll();
-  };
-
-  observeAll();
-
-  return { replay };
+  window.addEventListener("resize", () => {
+    if (isOpen) positionMenu();
+  }, { passive: true });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -243,6 +196,7 @@ export function setupCopy() {
 
   const status = document.querySelector("[data-copy-status]");
   const toast = document.querySelector("[data-copy-toast]");
+  const toastText = document.querySelector("[data-copy-toast-text]");
   let resetTimer = 0;
   let toastTimer = 0;
 
@@ -280,105 +234,56 @@ export function setupCopy() {
     return fallbackCopy(text);
   };
 
+  const resetButton = (button) => {
+    button.classList.remove("is-copied");
+    const label = button.querySelector(".profile-card__copy-label");
+    if (label) label.textContent = button.dataset.copyLabel || "Copiar";
+  };
+
+  const showToast = (message) => {
+    if (!toast) return;
+    if (toastText) toastText.textContent = message;
+    toast.hidden = false;
+    window.requestAnimationFrame(() => toast.classList.add("is-visible"));
+
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => {
+      toast.classList.remove("is-visible");
+      window.setTimeout(() => {
+        if (!toast.classList.contains("is-visible")) toast.hidden = true;
+      }, 220);
+    }, 2200);
+  };
+
   buttons.forEach((button) => {
     button.addEventListener("click", async () => {
       const text = button.dataset.copy || "";
-      const label = button.dataset.copyLabel || "Copiar";
       const copied = await copyText(text);
 
-      button.textContent = copied ? "Copiado" : "Não deu";
+      buttons.forEach((other) => {
+        if (other !== button) resetButton(other);
+      });
+
+      const label = button.querySelector(".profile-card__copy-label");
+      if (label) label.textContent = copied ? "Copiado" : button.dataset.copyLabel || "Copiar";
       button.classList.toggle("is-copied", copied);
+
       if (status) {
         status.textContent = copied
           ? `${text} copiado para a área de transferência.`
           : "Não foi possível copiar. Selecione e copie manualmente.";
       }
 
-      if (toast) {
-        toast.textContent = copied ? `${text} copiado` : "Não foi possível copiar";
-        toast.hidden = false;
-        window.requestAnimationFrame(() => toast.classList.add("is-visible"));
-        window.clearTimeout(toastTimer);
-        toastTimer = window.setTimeout(() => {
-          toast.classList.remove("is-visible");
-          window.setTimeout(() => {
-            if (!toast.classList.contains("is-visible")) toast.hidden = true;
-          }, 260);
-        }, 2200);
-      }
+      showToast(copied ? `${text} copiado` : "Não foi possível copiar");
 
       window.clearTimeout(resetTimer);
-      resetTimer = window.setTimeout(() => {
-        button.textContent = label;
-        button.classList.remove("is-copied");
-      }, 2200);
+      resetTimer = window.setTimeout(() => resetButton(button), 2200);
     });
   });
 }
 
 /* -------------------------------------------------------------------------- */
-/* Replay da experiência de entrada (apenas no link do rodapé)                */
-/* -------------------------------------------------------------------------- */
-export function setupReplay(reveals) {
-  const link = document.querySelector(".final__top");
-  if (!link) return;
-
-  let busy = false;
-
-  // `behavior: "auto"` respeita o scroll-behavior suave do CSS; para o replay
-  // precisamos sumir daqui na hora e só então reanimar a entrada.
-  const jumpToTop = () => {
-    const root = document.documentElement;
-    const previous = root.style.scrollBehavior;
-    root.style.scrollBehavior = "auto";
-    // Força o navegador a aplicar o estilo antes do salto; sem isso o scroll
-    // suave do CSS pode capturar a chamada e animar a página inteira.
-    void root.offsetHeight;
-    window.scrollTo(0, 0);
-    window.requestAnimationFrame(() => {
-      root.style.scrollBehavior = previous;
-    });
-  };
-
-  link.addEventListener("click", (event) => {
-    // O botão fixo (#backToTop) e a rolagem normal não reiniciam nada.
-    if (busy) {
-      event.preventDefault();
-      jumpToTop();
-      return;
-    }
-
-    event.preventDefault();
-
-    if (mqReduce.matches) {
-      jumpToTop();
-      return;
-    }
-
-    busy = true;
-    jumpToTop();
-
-    // Mantém o foco no topo, como um link âncora faria com o teclado.
-    document.getElementById("hero-title")?.focus({ preventScroll: true });
-
-    // Some com a entrada, volta ao estado inicial e reanima em seguida.
-    document.body.classList.remove("is-ready");
-    reveals?.replay();
-
-    void document.body.offsetWidth;
-
-    window.setTimeout(() => {
-      document.body.classList.add("is-ready");
-    }, 90);
-
-    window.setTimeout(() => {
-      busy = false;
-    }, 1000);
-  });
-}
-
-/* -------------------------------------------------------------------------- */
-/* Biblioteca: carrossel, contador e progresso                                */
+/* Biblioteca: estante arrastável, teclado, contador e progresso              */
 /* -------------------------------------------------------------------------- */
 export function setupLibrary() {
   const shelf = document.querySelector("[data-shelf]");
@@ -393,28 +298,31 @@ export function setupLibrary() {
   const cards = Array.from(track.children);
   const total = cards.length;
 
-  // Permite rolar com o teclado quando o carrossel estiver focado.
-  if (shelf.scrollWidth > shelf.clientWidth + 4) {
+  const maxScroll = () => Math.max(0, shelf.scrollWidth - shelf.clientWidth);
+  const isScrollable = () => maxScroll() > 2;
+
+  if (isScrollable()) {
     shelf.setAttribute("tabindex", "0");
     shelf.setAttribute("role", "region");
-    shelf.setAttribute("aria-label", "Carrossel de jogos — use as setas do teclado");
+    shelf.setAttribute("aria-roledescription", "carrossel");
+    shelf.setAttribute("aria-label", "Jogos da biblioteca — arraste ou use as setas do teclado");
   }
 
   const step = () => {
     const card = cards[0];
     if (!card) return 240;
-    const gap = Number.parseFloat(getComputedStyle(track).columnGap || "13") || 13;
+    const gap = Number.parseFloat(getComputedStyle(track).columnGap || "14") || 14;
     return card.getBoundingClientRect().width + gap;
   };
 
   const visibleIndex = () => {
     if (!cards.length) return 0;
-    const left = shelf.scrollLeft;
+    const shelfLeft = shelf.getBoundingClientRect().left;
     let best = 0;
     let bestDistance = Infinity;
 
     cards.forEach((card, index) => {
-      const distance = Math.abs(card.offsetLeft - left);
+      const distance = Math.abs(card.getBoundingClientRect().left - shelfLeft);
       if (distance < bestDistance) {
         bestDistance = distance;
         best = index;
@@ -425,7 +333,7 @@ export function setupLibrary() {
   };
 
   const update = () => {
-    const max = shelf.scrollWidth - shelf.clientWidth;
+    const max = maxScroll();
     const ratio = max > 2 ? shelf.scrollLeft / max : 0;
 
     if (progress) progress.style.setProperty("--shelf-progress", clamp(ratio, 0, 1).toFixed(4));
@@ -451,35 +359,11 @@ export function setupLibrary() {
   prev?.addEventListener("click", () => scrollByCards(-1));
   next?.addEventListener("click", () => scrollByCards(1));
 
-  // Roda do mouse rola a estante na horizontal. Nas pontas, soltamos o evento
-  // para a página continuar rolando normalmente.
-  shelf.addEventListener(
-    "wheel",
-    (event) => {
-      if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
-
-      const max = shelf.scrollWidth - shelf.clientWidth;
-      if (max <= 1) return;
-
-      const multiplier =
-        event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? shelf.clientWidth : 1;
-      const delta = event.deltaY * multiplier;
-      if (delta === 0) return;
-
-      const atStart = shelf.scrollLeft <= 0 && delta < 0;
-      const atEnd = shelf.scrollLeft >= max - 1 && delta > 0;
-      if (atStart || atEnd) return;
-
-      event.preventDefault();
-      shelf.scrollLeft = clamp(shelf.scrollLeft + delta, 0, max);
-    },
-    { passive: false },
-  );
-
   shelf.addEventListener("scroll", update, { passive: true });
-  window.addEventListener("resize", update, { passive: true });
 
   shelf.addEventListener("keydown", (event) => {
+    if (event.target !== shelf) return;
+
     if (event.key === "ArrowRight") {
       event.preventDefault();
       scrollByCards(1);
@@ -498,6 +382,123 @@ export function setupLibrary() {
     }
   });
 
+  /* Arraste com o mouse: a rolagem nativa continua valendo no toque.
+     Nas pontas, a trilha cede um pouco e volta ao soltar. */
+  let drag = null;
+  let suppressClick = false;
+  let settleTimer = 0;
+
+  const clearSettle = () => {
+    window.clearTimeout(settleTimer);
+    track.classList.remove("is-settling");
+  };
+
+  const onPointerDown = (event) => {
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
+    if (!isScrollable()) return;
+
+    clearSettle();
+    drag = {
+      id: event.pointerId,
+      startX: event.clientX,
+      startScroll: shelf.scrollLeft,
+      moved: false,
+    };
+    suppressClick = false;
+    track.style.transform = "";
+    shelf.classList.add("is-dragging");
+
+    if (shelf.setPointerCapture) {
+      try {
+        shelf.setPointerCapture(event.pointerId);
+      } catch {
+        // Alguns navegadores recusam a captura; o arraste ainda funciona.
+      }
+    }
+  };
+
+  const onPointerMove = (event) => {
+    if (!drag || event.pointerId !== drag.id) return;
+
+    const delta = event.clientX - drag.startX;
+
+    if (!drag.moved && Math.abs(delta) > 4) {
+      drag.moved = true;
+      suppressClick = true;
+    }
+
+    if (!drag.moved) return;
+
+    event.preventDefault();
+
+    const max = maxScroll();
+    const raw = drag.startScroll - delta;
+    const clamped = clamp(raw, 0, max);
+    shelf.scrollLeft = clamped;
+
+    const overshoot = raw < 0 ? raw : raw > max ? raw - max : 0;
+    if (overshoot !== 0) {
+      const give = Math.sign(overshoot) * Math.min(Math.abs(overshoot) * 0.32, 72);
+      track.style.transform = `translate3d(${give.toFixed(2)}px, 0, 0)`;
+    } else {
+      track.style.transform = "";
+    }
+  };
+
+  const endDrag = (event) => {
+    if (!drag) return;
+    if (event?.pointerId !== undefined && event.pointerId !== drag.id) return;
+
+    const pointerId = drag.id;
+    const hadOvershoot = Boolean(track.style.transform);
+
+    drag = null;
+    shelf.classList.remove("is-dragging");
+
+    if (hadOvershoot) {
+      track.classList.add("is-settling");
+      track.style.transform = "";
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(() => track.classList.remove("is-settling"), 360);
+    }
+
+    if (shelf.hasPointerCapture?.(pointerId)) {
+      try {
+        shelf.releasePointerCapture(pointerId);
+      } catch {
+        // A captura já pode ter sido liberada pelo navegador.
+      }
+    }
+  };
+
+  shelf.addEventListener("pointerdown", onPointerDown);
+  shelf.addEventListener("pointermove", onPointerMove, { passive: false });
+  shelf.addEventListener("pointerup", endDrag);
+  shelf.addEventListener("pointercancel", endDrag);
+  shelf.addEventListener("lostpointercapture", endDrag);
+
+  shelf.addEventListener("dragstart", (event) => event.preventDefault());
+
+  shelf.addEventListener(
+    "click",
+    (event) => {
+      if (!suppressClick) return;
+      suppressClick = false;
+      event.preventDefault();
+      event.stopPropagation();
+    },
+    true,
+  );
+
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(update);
+    observer.observe(shelf);
+    observer.observe(track);
+  }
+
+  window.addEventListener("resize", update, { passive: true });
+  window.addEventListener("load", update, { passive: true });
+
   update();
 }
 
@@ -505,9 +506,27 @@ export function setupLibrary() {
 /* Detecção de ponteiro: espelha exatamente o que o CSS faz                   */
 /* -------------------------------------------------------------------------- */
 export function setupInputMode() {
+  const syncCardLinks = (fine) => {
+    document.querySelectorAll(".game-card").forEach((card) => {
+      const cover = card.querySelector(".game-card__cover");
+      const cta = card.querySelector(".game-card__cta");
+
+      if (cover) {
+        cover.tabIndex = fine ? 0 : -1;
+        cover.setAttribute("aria-hidden", fine ? "false" : "true");
+      }
+
+      if (cta) {
+        cta.tabIndex = fine ? -1 : 0;
+        cta.setAttribute("aria-hidden", fine ? "true" : "false");
+      }
+    });
+  };
+
   const apply = () => {
-    const mode = mqFine.matches ? "fine" : "coarse";
-    document.documentElement.dataset.input = mode;
+    const fine = mqFine.matches;
+    document.documentElement.dataset.input = fine ? "fine" : "coarse";
+    syncCardLinks(fine);
   };
 
   apply();
@@ -537,7 +556,14 @@ export function setupProjectPreviews() {
       if (image.complete && image.naturalWidth > 0) done();
       else {
         image.addEventListener("load", done, { once: true });
-        image.addEventListener("error", () => preview.classList.add("is-failed"), { once: true });
+        image.addEventListener(
+          "error",
+          () => {
+            preview.classList.add("is-failed");
+            preview.classList.remove("is-loaded");
+          },
+          { once: true },
+        );
       }
       return;
     }
@@ -566,7 +592,7 @@ export function setupProjectPreviews() {
       preview.classList.remove("is-loaded");
     };
 
-    const timer = window.setTimeout(fail, 9000);
+    const timer = window.setTimeout(fail, 10000);
 
     frame.addEventListener("load", succeed, { once: true });
     frame.addEventListener("error", fail, { once: true });
@@ -586,7 +612,7 @@ export function setupProjectPreviews() {
         observer.unobserve(entry.target);
       });
     },
-    { threshold: 0.18, rootMargin: "180px 0px" },
+    { threshold: 0.12, rootMargin: "200px 0px" },
   );
 
   previews.forEach((preview) => observer.observe(preview));
@@ -612,17 +638,13 @@ export function setupFilters() {
 
       if (show) {
         visible += 1;
-        // Pequena entrada em cascata, sem exageros.
-        window.requestAnimationFrame(() => {
-          card.style.animationDelay = `${Math.min(visible, 8) * 28}ms`;
-          card.classList.add("is-filtering-in");
-        });
+        card.style.setProperty("--filter-delay", `${Math.min(visible, 5) * 24}ms`);
+        window.requestAnimationFrame(() => card.classList.add("is-filtering-in"));
       }
     });
 
     if (counter) {
-      counter.textContent =
-        visible === 1 ? "1 recomendação" : `${visible} recomendações`;
+      counter.textContent = visible === 1 ? "1 recomendação" : `${visible} recomendações`;
     }
   };
 

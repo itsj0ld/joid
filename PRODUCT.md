@@ -33,7 +33,7 @@ Shared as one link in chats and bios, and opened on phones and desktops by peopl
 
 ## Brand Commitments
 
-Name: Natan. Aliases: j0ld, dyleenim, schxzm. The voice is quiet, personal, and unhurried ("sem pressa", "feito com calma"). No logo or external brand guideline exists beyond the site's own mark.
+Name: Natan. Aliases: j0ld, dyleenim, schxzm. The voice is quiet, personal, and unhurried ("sem pressa", "feito com calma"). No logo or external brand guideline exists beyond the site's own mark. The site's own dark navy, glass and serif identity is the brand: no external product sets the visual bar. Refinement preserves that world and raises its craft; a replacement world needs an explicit new decision from Natan.
 
 ## Evidence on Hand
 

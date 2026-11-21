@@ -51,79 +51,25 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="css/base.css" />
-    <link rel="stylesheet" href="css/components.css" />
-    <link rel="stylesheet" href="css/sections.css" />
+    <link rel="stylesheet" href="css/base.css?v=20261121" />
+    <link rel="stylesheet" href="css/components.css?v=20261121" />
+    <link rel="stylesheet" href="css/sections.css?v=20261121" />
 
     <script>
       // Ativa os estilos de animação apenas quando há JavaScript disponível.
       document.documentElement.classList.remove("no-js");
       document.documentElement.classList.add("js");
-
-      // Rede de segurança: se algum módulo falhar, o site nunca fica preso no loader.
-      window.setTimeout(function () {
-        if (document.body && !document.body.classList.contains("is-ready")) {
-          document.body.classList.remove("is-loading");
-          var loader = document.getElementById("loader");
-          if (loader) {
-            loader.classList.add("is-done");
-            window.setTimeout(function () {
-              loader.hidden = true;
-            }, 900);
-          }
-          document.querySelectorAll("[data-reveal]").forEach(function (el) {
-            el.classList.add("is-in");
-          });
-        }
-      }, 9000);
     </script>
   </head>
 
-  <body class="is-loading">
+  <body>
     <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
     <!-- Barra fina de progresso da leitura -->
     <div class="scroll-progress" aria-hidden="true"><span id="scrollProgress"></span></div>
 
-    <!-- Fundo ambiente: malha de gradientes, orbes lentos e grão -->
-    <div class="ambient" aria-hidden="true">
-      <span class="ambient__orb ambient__orb--one"></span>
-      <span class="ambient__orb ambient__orb--two"></span>
-      <span class="ambient__orb ambient__orb--three"></span>
-      <span class="ambient__veil"></span>
-    </div>
+    <!-- Textura leve sobre o fundo; não interfere no toque nem no foco. -->
     <div class="grain" aria-hidden="true"></div>
-    <canvas id="particles" class="particles" aria-hidden="true"></canvas>
-
-    <!-- ====================================================================
-         TELA DE CARREGAMENTO
-         O progresso é real: cada asset concluído (ou com erro) avança a barra.
-         ==================================================================== -->
-    <div id="loader" class="loader" role="status" aria-live="polite">
-      <div class="loader__inner">
-        <div class="loader__mark" aria-hidden="true">
-          <span>n</span>
-          <i></i>
-        </div>
-        <p class="loader__eyebrow" id="loaderTitle">um canto pessoal</p>
-        <p class="loader__status" id="loaderStatus" aria-live="polite">Carregando o essencial...</p>
-        <div
-          class="loader__track"
-          id="loaderTrack"
-          role="progressbar"
-          aria-label="Progresso do carregamento"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          aria-valuenow="0"
-        >
-          <span class="loader__bar" id="loaderBar"></span>
-        </div>
-        <div class="loader__meta" aria-hidden="true">
-          <span id="loaderPercent">0%</span>
-          <span>j0ld</span>
-        </div>
-      </div>
-    </div>
 
     <!-- ====================================================================
          CABEÇALHO FIXO
@@ -145,11 +91,17 @@
           </span>
         </button>
 
-        <!-- Os apelidos são injetados pelo JS a partir de site.apelidos.
-             O bloco é decorativo: o nome acessível já vem do título da página. -->
-        <div class="wordmark" id="wordmark" aria-hidden="true"></div>
+        <a class="wordmark" href="#inicio" aria-label="Natan — voltar ao início">
+          Natan<span class="wordmark__dot" aria-hidden="true">.</span>
+        </a>
 
-        <span class="site-header__ghost" aria-hidden="true"></span>
+        <a class="header-link" href="#perfis">
+          perfis
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 17 17 7" />
+            <path d="M8 7h9v9" />
+          </svg>
+        </a>
       </div>
     </header>
 
@@ -163,14 +115,12 @@
       aria-hidden="true"
     >
       <div class="menu__inner">
-        <p class="menu__hint" aria-hidden="true">navegue com calma</p>
         <nav class="menu__nav" aria-label="Seções do site">
           <ul id="menuList"></ul>
         </nav>
-        <div class="menu__foot" aria-hidden="true">
-          <span>Natan</span>
-          <span>—</span>
-          <span id="menuYear">2026</span>
+        <div class="menu__foot">
+          <p class="menu__aliases" id="menuAliases"></p>
+          <p>© <span id="menuYear">2026</span> Natan</p>
         </div>
       </div>
     </div>
@@ -185,22 +135,21 @@
          ==================================================================== -->
     <footer class="final" id="final">
       <div class="final__inner">
-        <h2 class="final__message" id="finalMessage" data-reveal="blur">
-          Isso é tudo, por enquanto...
-        </h2>
+        <h2 class="final__message" id="finalMessage">Isso é tudo, por enquanto...</h2>
         <div class="final__foot">
           <span>© <span id="year">2026</span> Natan</span>
           <span class="final__dot" aria-hidden="true"></span>
           <span id="finalNote">feito com calma</span>
           <span class="final__dot" aria-hidden="true"></span>
-          <a href="#inicio" class="final__top">voltar ao topo ↑</a>
+          <a href="#inicio" class="final__top">voltar ao topo</a>
         </div>
       </div>
     </footer>
 
     <button class="back-to-top glass" id="backToTop" type="button" aria-label="Voltar ao topo">
-      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
-        <path d="M12 19V5M6 11l6-6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 19V5" />
+        <path d="m6 11 6-6 6 6" />
       </svg>
     </button>
 
@@ -210,6 +159,6 @@
       </div>
     </noscript>
 
-    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/main.js?v=20261121"></script>
   </body>
 </html>

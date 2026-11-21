@@ -1,0 +1,152 @@
+{
+  "title": "Escolha o mundo visual",
+  "question": "O sorteio caiu no sebo. Fique com ele, pegue um alternate ou peça outra mão.",
+  "options": [
+    {
+      "id": "assigned",
+      "kind": "assigned",
+      "label": "O sebo",
+      "kicker": "THE ROLL",
+      "lineage": "Sebo de games brasileiro, depois do expediente",
+      "thesis": "Um canto pessoal como um sebo de bairro: cada perfil, jogo e alternativa carrega uma etiqueta escrita à mão explicando por que ficou.",
+      "palette": ["#17130f", "#e7d8bd", "#b23a2b", "#5f7d5a", "#3a2a1e"],
+      "materials": ["madeira", "papel envelhecido", "fita crepe", "vidro de CRT"],
+      "viewport": "Um balcão ao anoitecer: uma TV de tubo passa o jogo do momento, um caderno aberto indexa as seis seções e etiquetas à mão marcam três escolhas na estante.",
+      "risk": "O sebo pode virar pastiche retrô; as etiquetas e o caderno precisam carregar gosto real, não decoração.",
+      "raised": [
+        {
+          "from": "challenger-neon-sign",
+          "raise": "O caderno lê como uma elevação de oficina: a estante inteira indexada de uma vez, e o item aceso em detalhe."
+        },
+        {
+          "from": "challenger-tensegrity",
+          "raise": "Toda alternativa ganha uma linha de tensão de volta ao padrão que ela substitui, não só uma categoria."
+        },
+        {
+          "from": "challenger-algorave",
+          "raise": "Um contador vivo acima da estante diz o que está passando agora; navegar atualiza o contador sem recarregar."
+        }
+      ]
+    },
+    {
+      "id": "model-pick",
+      "kind": "pick",
+      "label": "A estante do quarto",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "Uma estante pessoal à noite, iluminada por um abajur",
+      "thesis": "A coleção como a estante ao lado da cama: jogos, perfis e notas arrumados do jeito que você realmente guarda.",
+      "palette": ["#141210", "#e8d6b8", "#c96b3f", "#4f6b63", "#2b211a"],
+      "materials": ["madeira", "luz de abajur", "papel", "vidro de CRT"],
+      "viewport": "Uma estante na altura dos olhos, uma TV de tubo passando um jogo, um cartão de nome escrito à mão e as seis seções como zonas etiquetadas da estante.",
+      "risk": "Estante aconchegante é o caminho em que quase todo site pessoal cai; a especificidade tem que vir dos objetos e das notas."
+    },
+    {
+      "id": "challenger-deco",
+      "kind": "challenger",
+      "catalogId": "design-canon-deco-cinema-lobby",
+      "label": "O cinema de estreia",
+      "verdict": "competitive",
+      "lineage": "Lobby de cinema Art Deco na hora da estreia",
+      "thesis": "O canto pessoal como uma estreia: cada seção é uma soleira, cada escolha é o filme da noite.",
+      "palette": ["#0b0b0b", "#e6c88a", "#8b0e1a", "#b79a4d"],
+      "materials": ["laca ébano", "latão", "veludo", "lâmpadas de marquise"],
+      "viewport": "Uma marquise de latão em degraus sobre o tapete vermelho, o vídeo do herói como 'em cartaz', e as seis seções como programa impresso.",
+      "risk": "O glamour pode engolir a voz baixa e pessoal e transformar a página em uma casa de espetáculo.",
+      "case": "Funde bem: perfis viram ingressos, jogos viram sessões; perde em clareza porque toda visita vira uma estreia.",
+      "hero": ".impeccable/reference/deco-cinema-hero.webp",
+      "board": ".impeccable/reference/deco-cinema-board.webp"
+    },
+    {
+      "id": "challenger-ikebana",
+      "kind": "challenger",
+      "catalogId": "growth-metamorphosis-branching-ikebana-ma-arrangement",
+      "label": "O tokonoma",
+      "verdict": "competitive",
+      "lineage": "Alcova tokonoma com arranjo de ikebana",
+      "thesis": "A coleção como uma alcova arranjada: poucas coisas escolhidas, separadas por vazio ativo.",
+      "palette": ["#e7e2d6", "#6e665b", "#2eaa8c", "#2a2f28", "#1a1a18"],
+      "materials": ["gesso", "pinheiro desgastado", "bronze", "íris azul"],
+      "viewport": "Uma alcova de gesso claro, um galho de pinheiro e três íris, uma tela pequena passando o jogo do momento e um índice vertical das seis seções.",
+      "risk": "A calma é real, mas um amigo do mundo dos jogos pode não se reconhecer em uma alcova de ikebana.",
+      "case": "Segura a calma e o espaço negativo; perde em identificação de público para um hub de jogos.",
+      "hero": ".impeccable/reference/ikebana-hero.webp",
+      "board": ".impeccable/reference/ikebana-board.webp"
+    },
+    {
+      "id": "challenger-seven-segment",
+      "kind": "challenger",
+      "catalogId": "signals-instruments-seven-segment-alarm-clock",
+      "label": "O mostrador de sete segmentos",
+      "verdict": "competitive",
+      "lineage": "Mostradores de sete segmentos, do relógio de cabeceira ao placar",
+      "thesis": "A coleção como um mostrador aceso: células fixas, vagas fantasma e só o que está ligado agora.",
+      "palette": ["#080808", "#ff2020", "#ffb000", "#39ff14"],
+      "materials": ["preto fosco", "segmentos de LED", "células fantasma", "metal escovado"],
+      "viewport": "Um mostrador preto com as seis seções como células fixas, o vídeo do herói em uma janela emoldurada e contagens acesas em vermelho, âmbar e verde.",
+      "risk": "A máscara é rígida; capas de jogos e cartões de perfil podem parecer espremidos em um placar.",
+      "case": "Segura o reconhecimento imediato e a clareza de estado; perde em clareza de produto porque a coleção não é numérica.",
+      "hero": ".impeccable/reference/seven-segment-hero.webp",
+      "board": ".impeccable/reference/seven-segment-board.webp"
+    },
+    {
+      "id": "challenger-neon-sign",
+      "kind": "challenger",
+      "catalogId": "vernacular-ephemera-desert-neon-sign-program",
+      "label": "O letreiro de neon",
+      "verdict": "declined",
+      "lineage": "Letreiro de beira de estrada com painéis de porcelana",
+      "thesis": "O canto como um letreiro vertical: cada seção é um inquilino, cada um com sua sequência de lâmpadas.",
+      "palette": ["#f1e4c8", "#2c8f8a", "#e8452c", "#1b1b1b"],
+      "materials": ["porcelana esmaltada", "neon", "lâmpadas de perseguição"],
+      "viewport": "Um letreiro alto à noite, as seis seções empilhadas como inquilinos, a ativa acesa.",
+      "risk": "O letreiro é Americana, não esta sala; a perseguição vira barulho.",
+      "kept": "A elevação indexada: a pilha inteira visível, a linha ativa acesa."
+    },
+    {
+      "id": "challenger-tensegrity",
+      "kind": "challenger",
+      "catalogId": "kinetic-sculpture-automata-tensegrity-breathing-column",
+      "label": "A coluna de tensegridade",
+      "verdict": "declined",
+      "lineage": "Escultura de hastes de carbono e corda vermelha",
+      "thesis": "A coleção em tensão: cada item puxa contra o padrão que substitui.",
+      "palette": ["#0d0d0d", "#e7e5e1", "#d62828", "#9a9a9a"],
+      "materials": ["hastes de carbono", "corda vermelha", "concreto claro"],
+      "viewport": "Uma coluna que respira, etiquetas presas aos nós, forças visíveis.",
+      "risk": "A engenharia é bonita, mas o público não se identifica com um diagrama de forças.",
+      "kept": "A linha de tensão: toda alternativa nomeia o padrão de que se afasta."
+    },
+    {
+      "id": "challenger-algorave",
+      "kind": "challenger",
+      "catalogId": "medium-native-algorave-source-floor",
+      "label": "A pista de algorave",
+      "verdict": "declined",
+      "lineage": "Pista de algorave com código projetado ao vivo",
+      "thesis": "O canto como um live set: o código é o palco, e cada mudança cai no próximo ciclo.",
+      "palette": ["#0a0a0a", "#39ff14", "#ff2bd6", "#ffb000"],
+      "materials": ["buffer de código", "luz de projetor", "fumaça"],
+      "viewport": "Um buffer de código em escala de palco, o padrão atual destacado, a pista implícita.",
+      "risk": "A sala é alta e nichada; briga com a visita calma.",
+      "kept": "O contador vivo: o que está passando agora muda enquanto você navega, sem recarregar."
+    }
+  ],
+  "reroll": {
+    "registers": ["safer", "bolder"]
+  },
+  "buildPath": {
+    "value": "code",
+    "toggle": false
+  },
+  "canon": true,
+  "canonCard": {
+    "kind": "canon",
+    "label": "O link-in-bio de sempre",
+    "thesis": "O que esta categoria entrega, executado impecavelmente: gradiente escuro, nome, botões de vidro e uma fileira de capas.",
+    "palette": ["#060b18", "#8fb8ff", "#ffffff", "#1b2740"],
+    "materials": ["vidro", "gradiente", "sombra suave", "capas de jogo"],
+    "viewport": "Um nome centralizado e um avatar sobre um gradiente azul-marinho, uma linha de bio, uma grade de botões de vidro e uma fileira de capas.",
+    "risk": "Familiar e rápido, e indistinguível de qualquer outro hub pessoal."
+  },
+  "steer": true
+}
